@@ -1,13 +1,12 @@
 "use strict";
-let maxBack = 8;
-let wrapper = document.querySelector("div.hal-wrapper");
-let max = wrapper.scrollHeight;
-let ratio = (wrapper.scrollTop) / max;
-let ratioN = Math.floor(ratio * (maxBack));
-let maxBack2 = 7;
 let backEl = document.body.querySelector("div#back").children;
 let backElJml = backEl.length;
 let backAr = [];
+let maxBack = backElJml;
+let max = window.document.body.scrollHeight - window.innerHeight;
+let ratio = (window.scrollY) / max;
+let ratioN = Math.floor(ratio * (maxBack));
+let maxBack2 = 7;
 let ctr = 0;
 function update() {
     updateRatio();
@@ -45,11 +44,11 @@ function debug(str) {
     document.body.querySelector("div.debug").innerHTML = str;
 }
 function updateRatio() {
-    ratio = (wrapper.scrollTop) / max;
+    ratio = (window.scrollY) / max;
     ratioN = Math.floor(ratio * (maxBack));
-    if (ratioN > maxBack2)
-        ratioN = maxBack2;
-    debug("rationN " + ratioN + "/ratio " + ratio + "/max " + max);
+    if (ratioN >= maxBack)
+        ratioN--;
+    // console.log("rationN " + ratioN + "/ratio " + ratio + "/max " + max);
 }
 updateRatio();
 for (let i = 0; i < backElJml; i++) {
@@ -62,7 +61,7 @@ for (let i = 0; i < backElJml; i++) {
     item.style.right = '0px';
     item.style.bottom = '0px';
     if (i == 0) {
-        item.style.opacity = '0';
+        item.style.opacity = '1';
     }
     console.log(i);
 }
@@ -71,9 +70,20 @@ for (let i = 0; i < backElJml; i++) {
 // console.log(backAr[0].style.opacity);
 // console.log("ratio n " + ratioN);
 // console.log(backAr);
+function resize() {
+    document.body.querySelector("div#back").style.height = window.outerHeight + 'px';
+}
 window.onscroll = () => {
+    console.log('window on scroll');
     updateRatio();
-    console.log(ratioN);
-    console.log(wrapper.scrollTop);
+    // update();
+    // console.log(ratioN);
+    // console.log(wrapper.scrollTop);
+    // console.log(window.document.body.scrollHeight - window.innerHeight);
+    // console.log(window.scrollY);
 };
 window.requestAnimationFrame(update);
+window.onresize = () => {
+    resize();
+};
+resize();
